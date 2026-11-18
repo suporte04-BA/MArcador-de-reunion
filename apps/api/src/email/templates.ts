@@ -129,7 +129,7 @@ function logoHtmlBlock(available: boolean): string {
   if (!available) {
     return `<div style="color:#ffffff;font-size:24px;font-weight:bold;letter-spacing:-0.5px;mso-line-height-rule:exactly;">${escapeHtml(BRAND.name)}</div>`;
   }
-  return `<img src="cid:logo" alt="${escapeHtml(BRAND.name)}" width="170" height="40" border="0" style="display:block;border:0;height:auto;max-width:170px;mso-hide:all;" />`;
+  return `<img src="cid:logo" alt="${escapeHtml(BRAND.name)}" width="170" height="104" border="0" style="display:block;border:0;height:auto;max-width:170px;" />`;
 }
 
 function textRule(): string {
