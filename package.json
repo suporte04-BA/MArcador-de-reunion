@@ -1,0 +1,40 @@
+{
+  "name": "agenda-ba-eletrica",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Agenda Corporativa | Agenda BA — sistema de agendamento de reuniões para rede local",
+  "license": "UNLICENSED",
+  "workspaces": [
+    "packages/shared",
+    "apps/api",
+    "apps/web"
+  ],
+  "engines": {
+    "node": ">=24"
+  },
+  "scripts": {
+    "dev": "npm run build -w @agenda/shared && concurrently -k -n api,web -c blue,magenta \"npm run dev -w @agenda/api\" \"npm run dev -w @agenda/web\"",
+    "build": "npm run build -w @agenda/shared && npm run build -w @agenda/api && npm run build -w @agenda/web",
+    "start": "npm run start -w @agenda/api",
+    "db:migrate": "npm run db:migrate -w @agenda/api",
+    "db:reset": "npm run db:reset -w @agenda/api",
+    "admin:create": "npm run admin:create -w @agenda/api",
+    "admin:bootstrap": "npm run admin:bootstrap -w @agenda/api",
+    "lint": "eslint .",
+    "typecheck": "npm run build -w @agenda/shared && npm run typecheck -w @agenda/api && npm run typecheck -w @agenda/web && tsc -p e2e/tsconfig.json --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:e2e": "playwright test",
+    "email:status": "npm run email:status -w @agenda/api"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@playwright/test": "^1.65.1",
+    "@types/node": "^24.19.2",
+    "concurrently": "^10.0.7",
+    "eslint": "^10.15.0",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.73.0",
+    "vitest": "^5.1.0"
+  }
+}

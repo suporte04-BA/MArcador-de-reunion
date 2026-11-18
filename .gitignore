@@ -1,0 +1,28 @@
+node_modules/
+dist/
+build/
+coverage/
+*.tsbuildinfo
+
+# segredos
+.env
+.env.*
+!.env.example
+
+# dados locais
+storage/avatars/*
+!storage/avatars/.gitkeep
+storage/outbox/*
+!storage/outbox/.gitkeep
+*.log
+logs/
+
+# playwright / testes
+test-results/
+playwright-report/
+blob-report/
+.playwright/
+e2e/.auth/
+
+# backups (dumps do banco)
+backups/

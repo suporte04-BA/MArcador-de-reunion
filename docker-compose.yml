@@ -1,0 +1,35 @@
+services:
+  postgres:
+    image: postgres:17-alpine
+    container_name: agenda-ba-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: agenda
+      POSTGRES_PASSWORD: change_me
+      POSTGRES_DB: agenda_ba
+      TZ: America/Manaus
+    ports:
+      - "5433:5432"
+    volumes:
+      - agenda_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U agenda -d agenda_ba"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  # Mailpit: servidor SMTP local de desenvolvimento com interface web.
+  # NÃO exponha 8025/1025 para a rede de usuários em produção.
+  mailpit:
+    image: axllent/mailpit:v1.20
+    container_name: agenda-ba-mailpit
+    restart: unless-stopped
+    ports:
+      - "8025:8025"   # interface web (somente dev)
+      - "1025:1025"   # SMTP
+    environment:
+      MP_SMTP_AUTH_ALLOW_INSECURE: "true"
+      MP_MAX_MESSAGES: "5000"
+
+volumes:
+  agenda_pgdata:
