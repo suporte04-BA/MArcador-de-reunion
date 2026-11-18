@@ -25,14 +25,19 @@ export function escapeHtml(value: string): string {
 const BRAND = {
   name: 'BA Elétrica',
   product: 'Agenda BA',
-  accent: '#1d4ed8',
-  accentSoft: '#2563eb',
-  dark: '#0b1b33',
-  darkSoft: '#123a6b',
+  accent: '#2563eb',
+  accentSoft: '#3b82f6',
+  accentDark: '#1e40af',
+  dark: '#0f172a',
+  darkSoft: '#1e293b',
   text: '#1e293b',
   muted: '#64748b',
   border: '#e2e8f0',
-  surface: '#f8fafc',
+  surface: '#f1f5f9',
+  cardBg: '#ffffff',
+  highlight: '#eff6ff',
+  success: '#16a34a',
+  warning: '#d97706',
 };
 
 function ctaButton(label: string, href: string): string {
@@ -93,32 +98,49 @@ function layout(opts: LayoutOptions): string {
 <![endif]-->
 <title>${escapeHtml(opts.heading)}</title>
 <style>
-  body { margin:0; padding:0; background:#eef1f6; font-family:Arial,Helvetica,sans-serif; -webkit-text-size-adjust:100%; mso-line-height-rule:exactly; }
+  body { margin:0; padding:0; background:#f1f5f9; font-family:Arial,Helvetica,sans-serif; -webkit-text-size-adjust:100%; mso-line-height-rule:exactly; }
   table { border-collapse:collapse; mso-table-lspace:0pt; mso-table-rspace:0pt; }
   img { border:0; height:auto; line-height:100%; outline:none; text-decoration:none; -ms-interpolation-mode:bicubic; }
+  h1 { margin:0; }
+  a { color:${BRAND.accent}; }
 </style>
 </head>
-<body style="margin:0;padding:0;background:#eef1f6;font-family:Arial,Helvetica,sans-serif;-webkit-text-size-adjust:100%;mso-line-height-rule:exactly;">
+<body style="margin:0;padding:0;background:#f1f5f9;font-family:Arial,Helvetica,sans-serif;-webkit-text-size-adjust:100%;mso-line-height-rule:exactly;">
 <div style="display:none;max-height:0;overflow:hidden;opacity:0;color:transparent;mso-hide:all;">${escapeHtml(opts.preheader)}</div>
-<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#eef1f6;padding:24px 12px;">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#f1f5f9;padding:32px 16px;mso-cellspacing:0;mso-padding-alt:32px 16px;">
 <tr><td align="center">
-<table role="presentation" width="600" cellpadding="0" cellspacing="0" border="0" style="max-width:600px;background:#ffffff;border:1px solid ${BRAND.border};">
-  <tr><td bgcolor="${BRAND.dark}" style="background-color:${BRAND.dark};padding:22px 28px;">
+<!--[if mso]><table role="presentation" width="600" cellpadding="0" cellspacing="0" border="0"><tr><td><![endif]-->
+<table role="presentation" width="600" cellpadding="0" cellspacing="0" border="0" style="width:600px;max-width:600px;background:#ffffff;border:1px solid #e2e8f0;mso-cellspacing:0;">
+  <!-- Accent bar -->
+  <tr><td bgcolor="${BRAND.accent}" height="4" style="background-color:${BRAND.accent};height:4px;font-size:0;line-height:0;mso-line-height-rule:exactly;">&nbsp;</td></tr>
+  <!-- Header -->
+  <tr><td bgcolor="${BRAND.dark}" style="background-color:${BRAND.dark};padding:24px 32px;">
     ${opts.logoHtml}
-    <div style="color:#93c5fd;font-size:11px;letter-spacing:2px;text-transform:uppercase;margin-top:10px;font-weight:bold;mso-line-height-rule:exactly;">${escapeHtml(BRAND.product)}</div>
+    <div style="color:#93c5fd;font-size:11px;letter-spacing:2.5px;text-transform:uppercase;margin-top:12px;font-weight:bold;mso-line-height-rule:exactly;">${escapeHtml(BRAND.product)}</div>
   </td></tr>
-  <tr><td style="padding:28px;">
-    <h1 style="margin:0 0 14px;font-size:21px;line-height:1.3;color:${BRAND.dark};mso-line-height-rule:exactly;">${escapeHtml(opts.heading)}</h1>
-    <div style="color:${BRAND.text};font-size:14px;line-height:1.6;mso-line-height-rule:exactly;">${opts.introHtml}</div>
+  <!-- Body -->
+  <tr><td style="padding:32px;">
+    <h1 style="margin:0 0 16px;font-size:22px;line-height:1.3;color:${BRAND.dark};font-weight:bold;mso-line-height-rule:exactly;">${escapeHtml(opts.heading)}</h1>
+    <div style="color:${BRAND.text};font-size:14px;line-height:1.7;mso-line-height-rule:exactly;">${opts.introHtml}</div>
     ${opts.contentHtml}
     ${cta}
-    <p style="color:${BRAND.muted};font-size:13px;line-height:1.6;margin:18px 0 0;mso-line-height-rule:exactly;">${escapeHtml(opts.footerNote)}</p>
+    <p style="color:${BRAND.muted};font-size:13px;line-height:1.6;margin:20px 0 0;mso-line-height-rule:exactly;">${escapeHtml(opts.footerNote)}</p>
   </td></tr>
-  <tr><td bgcolor="${BRAND.surface}" style="background-color:${BRAND.surface};border-top:1px solid ${BRAND.border};padding:16px 28px;color:${BRAND.muted};font-size:12px;line-height:1.6;mso-line-height-rule:exactly;">
-    <strong style="color:${BRAND.text};">${escapeHtml(BRAND.name)}</strong> — Agenda Corporativa<br>
-    Mensagem enviada automaticamente pelo sistema de agendamento.
+  <!-- Footer -->
+  <tr><td bgcolor="#f8fafc" style="background-color:#f8fafc;border-top:1px solid #e2e8f0;padding:20px 32px;color:${BRAND.muted};font-size:12px;line-height:1.6;mso-line-height-rule:exactly;">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="mso-cellspacing:0;">
+      <tr>
+        <td style="color:${BRAND.muted};font-size:12px;line-height:1.6;">
+          <strong style="color:${BRAND.text};">${escapeHtml(BRAND.name)}</strong> &mdash; Agenda Corporativa
+        </td>
+        <td align="right" style="color:${BRAND.muted};font-size:11px;line-height:1.6;">
+          Enviado automaticamente
+        </td>
+      </tr>
+    </table>
   </td></tr>
 </table>
+<!--[if mso]></td></tr></table><![endif]-->
 </td></tr>
 </table>
 </body>
