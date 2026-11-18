@@ -197,8 +197,8 @@ export async function processOutbox(limit = 10): Promise<ProcessResult> {
         SET status = 'SENDING', updated_at = now(), attempt_count = attempt_count + 1
       WHERE id IN (
         SELECT id FROM notification_outbox
-         WHERE status IN ('PENDING','RETRYING')
-           AND next_attempt_at <= now()
+         WHERE (status IN ('PENDING','RETRYING') AND next_attempt_at <= now())
+            OR (status = 'SENDING' AND updated_at < now() - interval '2 minutes')
          ORDER BY next_attempt_at
          LIMIT $1
          FOR UPDATE SKIP LOCKED

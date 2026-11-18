@@ -36,9 +36,10 @@ const BRAND = {
 };
 
 function ctaButton(label: string, href: string): string {
-  return `<table role="presentation" cellpadding="0" cellspacing="0" style="margin:24px 0 4px;">
-    <tr><td style="background:${BRAND.accent};border-radius:8px;">
-      <a href="${escapeHtml(href)}" style="display:inline-block;padding:12px 22px;color:#ffffff;text-decoration:none;font-weight:bold;font-size:14px;border-radius:8px;">${escapeHtml(label)}</a>
+  return `<table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin:24px 0 4px;">
+    <tr><td bgcolor="${BRAND.accent}" style="background-color:${BRAND.accent};padding:12px 22px;">
+      <!--[if mso]><v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="${escapeHtml(href)}" style="height:42px;v-text-anchor:middle;width:220px;" arcsize="12%" stroke="f" fillcolor="${BRAND.accent}"><w:anchorlock/><center style="color:#ffffff;font-family:Arial,sans-serif;font-size:14px;font-weight:bold;">${escapeHtml(label)}</center></v:roundrect><![endif]-->
+      <!--[if !mso]><!--><a href="${escapeHtml(href)}" style="display:inline-block;padding:12px 22px;color:#ffffff;text-decoration:none;font-weight:bold;font-size:14px;border-radius:8px;background-color:${BRAND.accent};">${escapeHtml(label)}</a><!--<![endif]-->
     </td></tr>
   </table>`;
 }
@@ -53,8 +54,8 @@ function summaryTable(rows: Array<[string, string]>): string {
       </tr>`,
     )
     .join('');
-  return `<table role="presentation" cellpadding="0" cellspacing="0" style="width:100%;border-collapse:collapse;background:${BRAND.surface};border:1px solid ${BRAND.border};border-radius:8px;margin:0 0 8px;">
-    <tr><td style="padding:6px 16px;">${body}</td></tr>
+  return `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="1" bgcolor="${BRAND.surface}" style="width:100%;border-collapse:collapse;background-color:${BRAND.surface};border:1px solid ${BRAND.border};margin:0 0 8px;mso-padding-alt:6px 16px;">
+    <tr><td style="padding:6px 16px;mso-padding-alt:6px 16px;">${body}</td></tr>
   </table>`;
 }
 
@@ -73,30 +74,47 @@ function layout(opts: LayoutOptions): string {
   const cta =
     opts.ctaLabel && opts.ctaHref ? ctaButton(opts.ctaLabel, opts.ctaHref) : '';
   return `<!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-BR" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="color-scheme" content="light">
+<meta name="supported-color-schemes" content="light">
+<!--[if mso]>
+<noscript>
+<xml>
+<o:OfficeDocumentSettings>
+<o:PixelsPerInch>96</o:PixelsPerInch>
+<o:AllowPNG/>
+</o:OfficeDocumentSettings>
+</xml>
+</noscript>
+<![endif]-->
 <title>${escapeHtml(opts.heading)}</title>
+<style>
+  body { margin:0; padding:0; background:#eef1f6; font-family:Arial,Helvetica,sans-serif; -webkit-text-size-adjust:100%; mso-line-height-rule:exactly; }
+  table { border-collapse:collapse; mso-table-lspace:0pt; mso-table-rspace:0pt; }
+  img { border:0; height:auto; line-height:100%; outline:none; text-decoration:none; -ms-interpolation-mode:bicubic; }
+</style>
 </head>
-<body style="margin:0;padding:0;background:#eef1f6;font-family:Arial,Helvetica,sans-serif;-webkit-text-size-adjust:100%;">
-<div style="display:none;max-height:0;overflow:hidden;opacity:0;color:transparent;">${escapeHtml(opts.preheader)}</div>
-<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#eef1f6;padding:24px 12px;">
+<body style="margin:0;padding:0;background:#eef1f6;font-family:Arial,Helvetica,sans-serif;-webkit-text-size-adjust:100%;mso-line-height-rule:exactly;">
+<div style="display:none;max-height:0;overflow:hidden;opacity:0;color:transparent;mso-hide:all;">${escapeHtml(opts.preheader)}</div>
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#eef1f6;padding:24px 12px;">
 <tr><td align="center">
-<table role="presentation" width="600" cellpadding="0" cellspacing="0" style="width:100%;max-width:600px;background:#ffffff;border-radius:12px;border:1px solid ${BRAND.border};overflow:hidden;">
-  <tr><td style="background:linear-gradient(135deg,${BRAND.dark},${BRAND.darkSoft});padding:22px 28px;">
+<table role="presentation" width="600" cellpadding="0" cellspacing="0" border="0" style="max-width:600px;background:#ffffff;border:1px solid ${BRAND.border};">
+  <tr><td bgcolor="${BRAND.dark}" style="background-color:${BRAND.dark};padding:22px 28px;">
     ${opts.logoHtml}
-    <div style="color:#93c5fd;font-size:11px;letter-spacing:2px;text-transform:uppercase;margin-top:10px;font-weight:bold;">${escapeHtml(BRAND.product)}</div>
+    <div style="color:#93c5fd;font-size:11px;letter-spacing:2px;text-transform:uppercase;margin-top:10px;font-weight:bold;mso-line-height-rule:exactly;">${escapeHtml(BRAND.product)}</div>
   </td></tr>
   <tr><td style="padding:28px;">
-    <h1 style="margin:0 0 14px;font-size:21px;line-height:1.3;color:${BRAND.dark};">${escapeHtml(opts.heading)}</h1>
-    <div style="color:${BRAND.text};font-size:14px;line-height:1.6;">${opts.introHtml}</div>
+    <h1 style="margin:0 0 14px;font-size:21px;line-height:1.3;color:${BRAND.dark};mso-line-height-rule:exactly;">${escapeHtml(opts.heading)}</h1>
+    <div style="color:${BRAND.text};font-size:14px;line-height:1.6;mso-line-height-rule:exactly;">${opts.introHtml}</div>
     ${opts.contentHtml}
     ${cta}
-    <p style="color:${BRAND.muted};font-size:13px;line-height:1.6;margin:18px 0 0;">${escapeHtml(opts.footerNote)}</p>
+    <p style="color:${BRAND.muted};font-size:13px;line-height:1.6;margin:18px 0 0;mso-line-height-rule:exactly;">${escapeHtml(opts.footerNote)}</p>
   </td></tr>
-  <tr><td style="background:${BRAND.surface};border-top:1px solid ${BRAND.border};padding:16px 28px;color:${BRAND.muted};font-size:12px;line-height:1.6;">
+  <tr><td bgcolor="${BRAND.surface}" style="background-color:${BRAND.surface};border-top:1px solid ${BRAND.border};padding:16px 28px;color:${BRAND.muted};font-size:12px;line-height:1.6;mso-line-height-rule:exactly;">
     <strong style="color:${BRAND.text};">${escapeHtml(BRAND.name)}</strong> — Agenda Corporativa<br>
     Mensagem enviada automaticamente pelo sistema de agendamento.
   </td></tr>
@@ -109,9 +127,9 @@ function layout(opts: LayoutOptions): string {
 
 function logoHtmlBlock(available: boolean): string {
   if (!available) {
-    return `<div style="color:#ffffff;font-size:24px;font-weight:bold;letter-spacing:-0.5px;">${escapeHtml(BRAND.name)}</div>`;
+    return `<div style="color:#ffffff;font-size:24px;font-weight:bold;letter-spacing:-0.5px;mso-line-height-rule:exactly;">${escapeHtml(BRAND.name)}</div>`;
   }
-  return `<img src="cid:logo" alt="${escapeHtml(BRAND.name)}" width="170" style="display:block;border:0;height:auto;max-width:170px;">`;
+  return `<img src="cid:logo" alt="${escapeHtml(BRAND.name)}" width="170" height="40" border="0" style="display:block;border:0;height:auto;max-width:170px;mso-hide:all;" />`;
 }
 
 function textRule(): string {
@@ -230,19 +248,19 @@ export function renderMeetingEmail(
 
   const descriptionHtml = m.description
     ? `<p style="color:${BRAND.text};font-size:14px;margin:16px 0 4px;"><strong>Descrição</strong></p>
-       <p style="color:${BRAND.text};font-size:14px;line-height:1.6;margin:0 0 8px;white-space:pre-wrap;">${escapeHtml(m.description)}</p>`
+       <p style="color:${BRAND.text};font-size:14px;line-height:1.6;margin:0 0 8px;">${escapeHtml(m.description).replace(/\n/g, '<br>')}</p>`
     : '';
 
   const observationsHtml = m.observations
     ? `<p style="color:${BRAND.text};font-size:14px;margin:14px 0 4px;"><strong>Observações</strong></p>
-       <p style="color:${BRAND.text};font-size:14px;line-height:1.6;margin:0;white-space:pre-wrap;">${escapeHtml(m.observations)}</p>`
+       <p style="color:${BRAND.text};font-size:14px;line-height:1.6;margin:0;">${escapeHtml(m.observations).replace(/\n/g, '<br>')}</p>`
     : '';
 
-  const whenCard = `<table role="presentation" cellpadding="0" cellspacing="0" style="width:100%;border-collapse:collapse;background:linear-gradient(135deg,${BRAND.accent},${BRAND.accentSoft});border-radius:10px;margin:0 0 14px;">
-    <tr><td style="padding:16px 18px;color:#ffffff;">
-      <div style="font-size:11px;letter-spacing:2px;text-transform:uppercase;opacity:0.85;font-weight:bold;">Quando</div>
-      <div style="font-size:18px;font-weight:bold;margin-top:4px;">${escapeHtml(formatFullDateBR(zonedDateStr(m.startsAt)))}</div>
-      <div style="font-size:14px;margin-top:2px;opacity:0.95;">${escapeHtml(utcToZonedTimeStr(m.startsAt, DEFAULT_TIMEZONE))} – ${escapeHtml(utcToZonedTimeStr(m.endsAt, DEFAULT_TIMEZONE))} (${escapeHtml(durationText(minutesBetween(m.startsAt, m.endsAt)))})</div>
+  const whenCard = `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="${BRAND.accent}" style="width:100%;border-collapse:collapse;background-color:${BRAND.accent};margin:0 0 14px;mso-padding-alt:16px 18px;">
+    <tr><td style="padding:16px 18px;color:#ffffff;mso-padding-alt:16px 18px;">
+      <div style="font-size:11px;letter-spacing:2px;text-transform:uppercase;opacity:0.85;font-weight:bold;mso-line-height-rule:exactly;">Quando</div>
+      <div style="font-size:18px;font-weight:bold;margin-top:4px;mso-line-height-rule:exactly;">${escapeHtml(formatFullDateBR(zonedDateStr(m.startsAt)))}</div>
+      <div style="font-size:14px;margin-top:2px;opacity:0.95;mso-line-height-rule:exactly;">${escapeHtml(utcToZonedTimeStr(m.startsAt, DEFAULT_TIMEZONE))} - ${escapeHtml(utcToZonedTimeStr(m.endsAt, DEFAULT_TIMEZONE))} (${escapeHtml(durationText(minutesBetween(m.startsAt, m.endsAt)))})</div>
     </td></tr>
   </table>`;
 
