@@ -22,7 +22,7 @@ export function escapeHtml(value: string): string {
 }
 
 const BRAND = {
-  name: 'BA ElÃ©trica',
+  name: 'BA Elétrica',
   product: 'Agenda BA',
   accent: '#2563eb',
   accentLight: '#3b82f6',
@@ -187,10 +187,10 @@ function meetingRows(m: MeetingMailData): Array<[string, string]> {
   return [
     ['Assunto', escapeHtml(m.title)],
     ['Data', escapeHtml(dateStr)],
-    ['InÃ­cio', `${escapeHtml(start)} (fuso ${DEFAULT_TIMEZONE})`],
-    ['TÃ©rmino', escapeHtml(end)],
-    ['DuraÃ§Ã£o', escapeHtml(duration)],
-    ['ResponsÃ¡vel', escapeHtml(m.responsibleName)],
+    ['Início', `${escapeHtml(start)} (fuso ${DEFAULT_TIMEZONE})`],
+    ['Término', escapeHtml(end)],
+    ['Duração', escapeHtml(duration)],
+    ['Responsável', escapeHtml(m.responsibleName)],
     ['Setor', escapeHtml(m.departmentName ?? 'â€”')],
     ['Agendado por', escapeHtml(m.createdByName)],
   ];
@@ -216,8 +216,8 @@ function meetingSummaryText(m: MeetingMailData): string {
     `Data:           ${formatFullDateBR(zonedDateStr(m.startsAt))}`,
     `Inicio:         ${utcToZonedTimeStr(m.startsAt, DEFAULT_TIMEZONE)}`,
     `Termino:        ${utcToZonedTimeStr(m.endsAt, DEFAULT_TIMEZONE)}`,
-    `DuraÃ§Ã£o:        ${durationText(minutesBetween(m.startsAt, m.endsAt))}`,
-    `ResponsÃ¡vel:    ${m.responsibleName}`,
+    `Duração:        ${durationText(minutesBetween(m.startsAt, m.endsAt))}`,
+    `Responsável:    ${m.responsibleName}`,
     `Setor:          ${m.departmentName ?? 'â€”'}`,
     `Agendado por:   ${m.createdByName}`,
   ].join('\n');
@@ -230,41 +230,41 @@ export function renderMeetingEmail(
   baseUrl: string,
   logoAvailableFlag: boolean,
 ): RenderedEmail {
-  const meetingUrl = `${baseUrl}/?reuniÃ£o=${encodeURIComponent(m.id)}`;
+  const meetingUrl = `${baseUrl}/?reunião=${encodeURIComponent(m.id)}`;
   const when = formatWhen(m);
 
   const config = {
     created: {
-      subject: `Nova reuniÃ£o agendada: ${m.title}`,
-      heading: 'Nova reuniÃ£o agendada',
+      subject: `Nova reunião agendada: ${m.title}`,
+      heading: 'Nova reunião agendada',
       preheader: `${m.title} â€” ${when}`,
-      intro: `OlÃ¡, <strong>${escapeHtml(recipient.fullName)}</strong>. Uma nova reuniÃ£o foi agendada na agenda compartilhada da ${escapeHtml(BRAND.name)}.`,
-      note: 'VocÃª recebeu este e-mail porque Ã© um usuÃ¡rio ativo da Agenda BA. Todas as reuniÃµes da empresa sÃ£o comÃºnicadas a todos os usuÃ¡rios ativos.',
-      cta: 'Ver reuniÃ£o na Agenda BA',
+      intro: `Olá, <strong>${escapeHtml(recipient.fullName)}</strong>. Uma nova reunião foi agendada na agenda compartilhada da ${escapeHtml(BRAND.name)}.`,
+      note: 'Você recebeu este e-mail porque é um usuário ativo da Agenda BA. Todas as reuniões da empresa são comúnicadas a todos os usuários ativos.',
+      cta: 'Ver reunião na Agenda BA',
     },
     updated: {
-      subject: `ReuniÃ£o alterada: ${m.title}`,
-      heading: 'ReuniÃ£o alterada',
+      subject: `Reunião alterada: ${m.title}`,
+      heading: 'Reunião alterada',
       preheader: `${m.title} â€” ${when}`,
-      intro: `OlÃ¡, <strong>${escapeHtml(recipient.fullName)}</strong>. A reuniÃ£o abaixo teve alteraÃ§Ãµes em seus dados ou horÃ¡rio.`,
-      note: 'VocÃª recebeu este e-mail porque Ã© um usuÃ¡rio ativo da Agenda BA. ConfirÃ¡ os dados atualizados antes da reuniÃ£o.',
-      cta: 'Ver reuniÃ£o na Agenda BA',
+      intro: `Olá, <strong>${escapeHtml(recipient.fullName)}</strong>. A reunião abaixo teve alterações em seus dados ou horário.`,
+      note: 'Você recebeu este e-mail porque é um usuário ativo da Agenda BA. Confirá os dados atualizados antes da reunião.',
+      cta: 'Ver reunião na Agenda BA',
     },
     cancelled: {
-      subject: `ReuniÃ£o cancelada: ${m.title}`,
-      heading: 'ReuniÃ£o cancelada',
+      subject: `Reunião cancelada: ${m.title}`,
+      heading: 'Reunião cancelada',
       preheader: `${m.title} â€” ${when}`,
-      intro: `OlÃ¡, <strong>${escapeHtml(recipient.fullName)}</strong>. A reuniÃ£o abaixo foi cancelada e o horÃ¡rio voltou a ficar disponÃ­vel na agenda.`,
-      note: 'VocÃª recebeu este e-mail porque Ã© um usuÃ¡rio ativo da Agenda BA.',
+      intro: `Olá, <strong>${escapeHtml(recipient.fullName)}</strong>. A reunião abaixo foi cancelada e o horário voltou a ficar disponível na agenda.`,
+      note: 'Você recebeu este e-mail porque é um usuário ativo da Agenda BA.',
       cta: 'Abrir a agenda',
     },
     reminder: {
-      subject: `Lembrete: reuniÃ£o hoje â€” ${m.title}`,
-      heading: 'Lembrete de reuniÃ£o hoje',
+      subject: `Lembrete: reunião hoje â€” ${m.title}`,
+      heading: 'Lembrete de reunião hoje',
       preheader: `${m.title} â€” ${when}`,
-      intro: `OlÃ¡, <strong>${escapeHtml(recipient.fullName)}</strong>. Lembrete: vocÃª tem uma reuniÃ£o agendada para <strong>hoje</strong>.`,
-      note: 'VocÃª recebeu este e-mail porque Ã© um usuÃ¡rio ativo da Agenda BA. ConfirÃ¡ os detalhes abaixo e prepare-se para a reuniÃ£o.',
-      cta: 'Ver reuniÃ£o na Agenda BA',
+      intro: `Olá, <strong>${escapeHtml(recipient.fullName)}</strong>. Lembrete: você tem uma reunião agendada para <strong>hoje</strong>.`,
+      note: 'Você recebeu este e-mail porque é um usuário ativo da Agenda BA. Confirá os detalhes abaixo e prepare-se para a reunião.',
+      cta: 'Ver reunião na Agenda BA',
     },
   }[kind];
 
@@ -273,11 +273,11 @@ export function renderMeetingEmail(
     : '';
 
   const descriptionHtml = m.description
-    ? sectionBlock('DescriÃ§Ã£o', escapeHtml(m.description).replace(/\n/g, '<br>'), BRAND.accent)
+    ? sectionBlock('Descrição', escapeHtml(m.description).replace(/\n/g, '<br>'), BRAND.accent)
     : '';
 
   const observationsHtml = m.observations
-    ? sectionBlock('ObservaÃ§Ãµes', escapeHtml(m.observations).replace(/\n/g, '<br>'), BRAND.warning)
+    ? sectionBlock('Observações', escapeHtml(m.observations).replace(/\n/g, '<br>'), BRAND.warning)
     : '';
 
   const whenCard = `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="${BRAND.accent}" style="width:100%;max-width:600px;border-collapse:collapse;background-color:${BRAND.accent};margin:0 0 20px;mso-cellspacing:0;mso-padding-alt:20px 24px;">
@@ -299,7 +299,7 @@ export function renderMeetingEmail(
       ${summaryTable(meetingRows(m))}
       ${descriptionHtml}
       ${observationsHtml}
-      <p style="color:${BRAND.muted};font-size:12px;margin:16px 0 0;mso-line-height-rule:exactly;">HorÃ¡rio de referÃªncia: ${escapeHtml(when)}.</p>`,
+      <p style="color:${BRAND.muted};font-size:12px;margin:16px 0 0;mso-line-height-rule:exactly;">Horário de referência: ${escapeHtml(when)}.</p>`,
     ctaLabel: config.cta,
     ctaHref: meetingUrl,
     footerNote: config.note,
@@ -315,11 +315,11 @@ export function renderMeetingEmail(
   if (m.changedFields?.length) {
     lines.push('', `Campos alterados: ${m.changedFields.join(', ')}.`);
   }
-  if (m.description) lines.push('', 'DescriÃ§Ã£o:', m.description);
-  if (m.observations) lines.push('', 'ObservaÃ§Ãµes:', m.observations);
+  if (m.description) lines.push('', 'Descrição:', m.description);
+  if (m.observations) lines.push('', 'Observações:', m.observations);
   lines.push(
     '',
-    `HorÃ¡rio de referÃªncia: ${when}.`,
+    `Horário de referência: ${when}.`,
     '',
     `Abrir na Agenda BA: ${meetingUrl}`,
     textRule(),
@@ -339,11 +339,11 @@ export function renderInviteEmail(
   logoAvailableFlag: boolean,
 ): RenderedEmail {
   const activateUrl = `${baseUrl}/?convite=${encodeURIComponent(token)}`;
-  const heading = 'Ative seu acesso Ã  Agenda BA';
+  const heading = 'Ative seu acesso à Agenda BA';
   const html = layout({
     preheader: `Olá ${user.fullName}, ative seu acesso à agenda`,
     heading,
-    introHtml: `OlÃ¡, <strong>${escapeHtml(user.fullName)}</strong>. Um acesso foi criado para vocÃª na agenda corporativa da ${escapeHtml(BRAND.name)}.`,
+    introHtml: `Olá, <strong>${escapeHtml(user.fullName)}</strong>. Um acesso foi criado para você na agenda corporativa da ${escapeHtml(BRAND.name)}.`,
     logoHtml: logoHtmlBlock(logoAvailableFlag),
     contentHtml: summaryTable([
       ['Nome de usuario', escapeHtml(user.username)],
@@ -353,23 +353,23 @@ export function renderInviteEmail(
     ctaLabel: 'Ativar meu acesso',
     ctaHref: activateUrl,
     footerNote:
-      'Este link e de uso Ãºnico e expirÃ¡ em 72 horas. Se vocÃª nao solicitou este acesso, ignore esta mensagem. Por seguranÃ§a, nenhuma senha e enviada por e-mail: vocÃª definirÃ¡ a sua prÃ³pria senha no primeiro acesso.',
+      'Este link e de uso único e expirá em 72 horas. Se você nao solicitou este acesso, ignore esta mensagem. Por segurança, nenhuma senha e enviada por e-mail: você definirá a sua própria senha no primeiro acesso.',
   });
 
   const text = [
     heading.toUpperCase(),
     textRule(),
-    `OlÃ¡ ${user.fullName},`,
+    `Olá ${user.fullName},`,
     '',
-    'Um acesso foi criado para vocÃª na agenda corporativa da BA ElÃ©trica.',
+    'Um acesso foi criado para você na agenda corporativa da BA Elétrica.',
     '',
     `Nome de usuario: ${user.username}`,
     `E-mail:         ${user.email}`,
     '',
     `Ativar meu acesso: ${activateUrl}`,
     '',
-    'O link Ã© de uso Ãºnico e expirÃ¡ em 72 horas. Nenhuma senha Ã© enviada por e-mail:',
-    'vocÃª irÃ¡ definir a sua prÃ³pria senha ao ativar o acesso.',
+    'O link é de uso único e expirá em 72 horas. Nenhuma senha é enviada por e-mail:',
+    'você irá definir a sua própria senha ao ativar o acesso.',
     textRule(),
     `${BRAND.name} â€” ${BRAND.product}`,
     baseUrl,
@@ -394,29 +394,29 @@ export function renderWelcomeEmail(
       ['Nome de usuario', escapeHtml(user.username)],
       ['E-mail', escapeHtml(user.email)],
       ['Setor', escapeHtml(departmentName)],
-      ['SituaÃ§Ã£o', 'Ativo â€” login liberado'],
+      ['Situação', 'Ativo â€” login liberado'],
     ]),
     ctaLabel: 'Abrir a Agenda BA',
     ctaHref: baseUrl,
     footerNote:
-      'Por seguranÃ§a, nenhuma senha Ã© enviada por e-mail. Use o nome de usuÃ¡rio acima e a senha definida para acessar o sistema. Se vocÃª nÃ£o solicitou este cadastro, ignore esta mensagem.',
+      'Por segurança, nenhuma senha é enviada por e-mail. Use o nome de usuário acima e a senha definida para acessar o sistema. Se você não solicitou este cadastro, ignore esta mensagem.',
   });
 
   const text = [
     'CADASTRO REALIZADO NA AGENDA BA',
     textRule(),
-    `OlÃ¡ ${user.fullName},`,
+    `Olá ${user.fullName},`,
     '',
-    'Seu acesso Ã  agenda corporativa da BA ElÃ©trica foi cadastrado e jÃ¡ estÃ¡ ativo.',
+    'Seu acesso à agenda corporativa da BA Elétrica foi cadastrado e já está ativo.',
     '',
     `Nome de usuario: ${user.username}`,
     `E-mail:         ${user.email}`,
     `Setor:          ${departmentName}`,
-    'SituaÃ§Ã£o:       Ativo â€” login liberado',
+    'Situação:       Ativo â€” login liberado',
     '',
     `Abrir a agenda: ${baseUrl}`,
     '',
-    'Por seguranÃ§a, nenhuma senha Ã© enviada por e-mail.',
+    'Por segurança, nenhuma senha é enviada por e-mail.',
     textRule(),
     `${BRAND.name} â€” ${BRAND.product}`,
     baseUrl,
@@ -434,29 +434,29 @@ export function renderPasswordResetEmail(
   const resetUrl = `${baseUrl}/?redefinir=${encodeURIComponent(token)}`;
   const heading = 'Redefinicao de senha';
   const html = layout({
-    preheader: 'SolicitaÃ§Ã£o de redefiniÃ§Ã£o de senha',
+    preheader: 'Solicitação de redefinição de senha',
     heading,
-    introHtml: `OlÃ¡, <strong>${escapeHtml(user.fullName)}</strong>. Recebemos uma solicitaÃ§Ã£o para redefinir a senha da sua conta (<strong>${escapeHtml(user.username)}</strong>).`,
+    introHtml: `Olá, <strong>${escapeHtml(user.fullName)}</strong>. Recebemos uma solicitação para redefinir a senha da sua conta (<strong>${escapeHtml(user.username)}</strong>).`,
     logoHtml: logoHtmlBlock(logoAvailableFlag),
-    contentHtml: `<p style="color:${BRAND.text};font-size:14px;line-height:1.6;margin:14px 0 0;">Se foi vocÃª, use o botÃ£o abaixo para escolher uma nova senha. O link expirÃ¡ em <strong>60 minutos</strong> e pode ser usado uma Ãºnica vez.</p>`,
+    contentHtml: `<p style="color:${BRAND.text};font-size:14px;line-height:1.6;margin:14px 0 0;">Se foi você, use o botão abaixo para escolher uma nova senha. O link expirá em <strong>60 minutos</strong> e pode ser usado uma única vez.</p>`,
     ctaLabel: 'Redefinir minha senha',
     ctaHref: resetUrl,
     footerNote:
-      'Se vocÃª nÃ£o solicitou esta redefiniÃ§Ã£o, ignore esta mensagem: sua senha continua a atual. Nunca compartilhe este link.',
+      'Se você não solicitou esta redefinição, ignore esta mensagem: sua senha continua a atual. Nunca compartilhe este link.',
   });
 
   const text = [
     heading.toUpperCase(),
     textRule(),
-    `OlÃ¡ ${user.fullName},`,
+    `Olá ${user.fullName},`,
     '',
-    'Recebemos uma solicitaÃ§Ã£o para redefinir a senha da sua conta.',
+    'Recebemos uma solicitação para redefinir a senha da sua conta.',
     `Usuario: ${user.username}`,
     '',
     `Redefinir: ${resetUrl}`,
-    'O link expirÃ¡ em 60 minutos e Ã© de uso Ãºnico.',
+    'O link expirá em 60 minutos e é de uso único.',
     '',
-    'Se vocÃª nÃ£o solicitou esta redefiniÃ§Ã£o, ignore esta mensagem.',
+    'Se você não solicitou esta redefinição, ignore esta mensagem.',
     textRule(),
     `${BRAND.name} â€” ${BRAND.product}`,
     baseUrl,
@@ -475,10 +475,10 @@ export function renderTestEmail(
   const html = layout({
     preheader: 'Mensagem de teste solicitada pelo administrador',
     heading,
-    introHtml: `OlÃ¡, <strong>${escapeHtml(recipient.fullName)}</strong>. Esta Ã© uma mensagem de teste do canal de e-mail da <strong>${escapeHtml(BRAND.name)}</strong>.`,
+    introHtml: `Olá, <strong>${escapeHtml(recipient.fullName)}</strong>. Esta é uma mensagem de teste do canal de e-mail da <strong>${escapeHtml(BRAND.name)}</strong>.`,
     logoHtml: logoHtmlBlock(logoAvailableFlag),
     contentHtml: summaryTable([
-      ['DestinatÃ¡rio', escapeHtml(recipient.email)],
+      ['Destinatário', escapeHtml(recipient.email)],
       ['Solicitado por', escapeHtml(requestedBy)],
       ['Sistema', 'Agenda BA â€” canal transacional'],
       ['Status', 'Mensagem de teste enviada com sucesso'],
@@ -486,23 +486,23 @@ export function renderTestEmail(
     ctaLabel: 'Abrir a Agenda BA',
     ctaHref: baseUrl,
     footerNote:
-      'Esta mensagem foi solicitada pelo administrador do sistema para validar o envio. Nenhuma aÃ§Ã£o Ã© necessÃ¡ria.',
+      'Esta mensagem foi solicitada pelo administrador do sistema para validar o envio. Nenhuma ação é necessária.',
   });
 
   const text = [
     'TESTE DE E-MAIL',
     textRule(),
-    `OlÃ¡ ${recipient.fullName},`,
+    `Olá ${recipient.fullName},`,
     '',
-    'Esta Ã© uma mensagem de teste do canal de e-mail da BA ElÃ©trica.',
+    'Esta é uma mensagem de teste do canal de e-mail da BA Elétrica.',
     '',
-    `DestinatÃ¡rio:   ${recipient.email}`,
+    `Destinatário:   ${recipient.email}`,
     `Solicitado por: ${requestedBy}`,
     `Sistema:        Agenda BA â€” canal transacional`,
     '',
     `Abrir a agenda: ${baseUrl}`,
     textRule(),
-    'Mensagem solicitada pelo administrador. Nenhuma aÃ§Ã£o Ã© necessÃ¡ria.',
+    'Mensagem solicitada pelo administrador. Nenhuma ação é necessária.',
     `${BRAND.name} â€” ${BRAND.product}`,
   ].join('\n');
 
@@ -533,7 +533,7 @@ export function icsAttachment(m: MeetingMailData, organizerEmail: string): {
   const ics = [
     'BEGIN:VCALENDAR',
     'VERSION:2.0',
-    'PRODID:-//Agenda BA//BA ElÃ©trica//PT-BR',
+    'PRODID:-//Agenda BA//BA Elétrica//PT-BR',
     'CALSCALE:GREGORIAN',
     'METHOD:REQUEST',
     'BEGIN:VEVENT',
