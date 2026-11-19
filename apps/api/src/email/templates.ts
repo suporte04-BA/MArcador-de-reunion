@@ -1,4 +1,4 @@
-﻿import {
+import {
   DEFAULT_TIMEZONE,
   durationText,
   formatFullDateBR,
@@ -191,13 +191,13 @@ function meetingRows(m: MeetingMailData): Array<[string, string]> {
     ['Término', escapeHtml(end)],
     ['Duração', escapeHtml(duration)],
     ['Responsável', escapeHtml(m.responsibleName)],
-    ['Setor', escapeHtml(m.departmentName ?? 'â€”')],
+    ['Setor', escapeHtml(m.departmentName ?? '—')],
     ['Agendado por', escapeHtml(m.createdByName)],
   ];
 }
 
 function formatWhen(m: MeetingMailData): string {
-  return `${formatFullDateBR(zonedDateStr(m.startsAt))}, ${utcToZonedTimeStr(m.startsAt, DEFAULT_TIMEZONE)} â€“ ${utcToZonedTimeStr(m.endsAt, DEFAULT_TIMEZONE)}`;
+  return `${formatFullDateBR(zonedDateStr(m.startsAt))}, ${utcToZonedTimeStr(m.startsAt, DEFAULT_TIMEZONE)} — ${utcToZonedTimeStr(m.endsAt, DEFAULT_TIMEZONE)}`;
 }
 
 function zonedDateStr(d: Date): string {
@@ -218,7 +218,7 @@ function meetingSummaryText(m: MeetingMailData): string {
     `Termino:        ${utcToZonedTimeStr(m.endsAt, DEFAULT_TIMEZONE)}`,
     `Duração:        ${durationText(minutesBetween(m.startsAt, m.endsAt))}`,
     `Responsável:    ${m.responsibleName}`,
-    `Setor:          ${m.departmentName ?? 'â€”'}`,
+    `Setor:          ${m.departmentName ?? '—'}`,
     `Agendado por:   ${m.createdByName}`,
   ].join('\n');
 }
@@ -237,7 +237,7 @@ export function renderMeetingEmail(
     created: {
       subject: `Nova reunião agendada: ${m.title}`,
       heading: 'Nova reunião agendada',
-      preheader: `${m.title} â€” ${when}`,
+      preheader: `${m.title} — ${when}`,
       intro: `Olá, <strong>${escapeHtml(recipient.fullName)}</strong>. Uma nova reunião foi agendada na agenda compartilhada da ${escapeHtml(BRAND.name)}.`,
       note: 'Você recebeu este e-mail porque é um usuário ativo da Agenda BA. Todas as reuniões da empresa são comúnicadas a todos os usuários ativos.',
       cta: 'Ver reunião na Agenda BA',
@@ -245,7 +245,7 @@ export function renderMeetingEmail(
     updated: {
       subject: `Reunião alterada: ${m.title}`,
       heading: 'Reunião alterada',
-      preheader: `${m.title} â€” ${when}`,
+      preheader: `${m.title} — ${when}`,
       intro: `Olá, <strong>${escapeHtml(recipient.fullName)}</strong>. A reunião abaixo teve alterações em seus dados ou horário.`,
       note: 'Você recebeu este e-mail porque é um usuário ativo da Agenda BA. Confirá os dados atualizados antes da reunião.',
       cta: 'Ver reunião na Agenda BA',
@@ -253,15 +253,15 @@ export function renderMeetingEmail(
     cancelled: {
       subject: `Reunião cancelada: ${m.title}`,
       heading: 'Reunião cancelada',
-      preheader: `${m.title} â€” ${when}`,
+      preheader: `${m.title} — ${when}`,
       intro: `Olá, <strong>${escapeHtml(recipient.fullName)}</strong>. A reunião abaixo foi cancelada e o horário voltou a ficar disponível na agenda.`,
       note: 'Você recebeu este e-mail porque é um usuário ativo da Agenda BA.',
       cta: 'Abrir a agenda',
     },
     reminder: {
-      subject: `Lembrete: reunião hoje â€” ${m.title}`,
+      subject: `Lembrete: reunião hoje — ${m.title}`,
       heading: 'Lembrete de reunião hoje',
-      preheader: `${m.title} â€” ${when}`,
+      preheader: `${m.title} — ${when}`,
       intro: `Olá, <strong>${escapeHtml(recipient.fullName)}</strong>. Lembrete: você tem uma reunião agendada para <strong>hoje</strong>.`,
       note: 'Você recebeu este e-mail porque é um usuário ativo da Agenda BA. Confirá os detalhes abaixo e prepare-se para a reunião.',
       cta: 'Ver reunião na Agenda BA',
@@ -324,7 +324,7 @@ export function renderMeetingEmail(
     `Abrir na Agenda BA: ${meetingUrl}`,
     textRule(),
     config.note,
-    `${BRAND.name} â€” ${BRAND.product}`,
+    `${BRAND.name} — ${BRAND.product}`,
     baseUrl,
   );
   const text = lines.join('\n');
@@ -348,7 +348,7 @@ export function renderInviteEmail(
     contentHtml: summaryTable([
       ['Nome de usuario', escapeHtml(user.username)],
       ['E-mail', escapeHtml(user.email)],
-      ['Perfil', user.username ? 'Conforme cadastrado pelo administrador' : 'â€”'],
+      ['Perfil', user.username ? 'Conforme cadastrado pelo administrador' : '—'],
     ]),
     ctaLabel: 'Ativar meu acesso',
     ctaHref: activateUrl,
@@ -371,11 +371,11 @@ export function renderInviteEmail(
     'O link é de uso único e expirá em 72 horas. Nenhuma senha é enviada por e-mail:',
     'você irá definir a sua própria senha ao ativar o acesso.',
     textRule(),
-    `${BRAND.name} â€” ${BRAND.product}`,
+    `${BRAND.name} — ${BRAND.product}`,
     baseUrl,
   ].join('\n');
 
-  return { subject: `Ative seu acesso â€” ${BRAND.product}`, text, html };
+  return { subject: `Ative seu acesso — ${BRAND.product}`, text, html };
 }
 
 export function renderWelcomeEmail(
@@ -394,7 +394,7 @@ export function renderWelcomeEmail(
       ['Nome de usuario', escapeHtml(user.username)],
       ['E-mail', escapeHtml(user.email)],
       ['Setor', escapeHtml(departmentName)],
-      ['Situação', 'Ativo â€” login liberado'],
+      ['Situação', 'Ativo — login liberado'],
     ]),
     ctaLabel: 'Abrir a Agenda BA',
     ctaHref: baseUrl,
@@ -412,17 +412,17 @@ export function renderWelcomeEmail(
     `Nome de usuario: ${user.username}`,
     `E-mail:         ${user.email}`,
     `Setor:          ${departmentName}`,
-    'Situação:       Ativo â€” login liberado',
+    'Situação:       Ativo — login liberado',
     '',
     `Abrir a agenda: ${baseUrl}`,
     '',
     'Por segurança, nenhuma senha é enviada por e-mail.',
     textRule(),
-    `${BRAND.name} â€” ${BRAND.product}`,
+    `${BRAND.name} — ${BRAND.product}`,
     baseUrl,
   ].join('\n');
 
-  return { subject: `Seu acesso esta ativo â€” ${BRAND.product}`, text, html };
+  return { subject: `Seu acesso esta ativo — ${BRAND.product}`, text, html };
 }
 
 export function renderPasswordResetEmail(
@@ -458,11 +458,11 @@ export function renderPasswordResetEmail(
     '',
     'Se você não solicitou esta redefinição, ignore esta mensagem.',
     textRule(),
-    `${BRAND.name} â€” ${BRAND.product}`,
+    `${BRAND.name} — ${BRAND.product}`,
     baseUrl,
   ].join('\n');
 
-  return { subject: `Redefinicao de senha â€” ${BRAND.product}`, text, html };
+  return { subject: `Redefinicao de senha — ${BRAND.product}`, text, html };
 }
 
 export function renderTestEmail(
@@ -480,7 +480,7 @@ export function renderTestEmail(
     contentHtml: summaryTable([
       ['Destinatário', escapeHtml(recipient.email)],
       ['Solicitado por', escapeHtml(requestedBy)],
-      ['Sistema', 'Agenda BA â€” canal transacional'],
+      ['Sistema', 'Agenda BA — canal transacional'],
       ['Status', 'Mensagem de teste enviada com sucesso'],
     ]),
     ctaLabel: 'Abrir a Agenda BA',
@@ -498,15 +498,15 @@ export function renderTestEmail(
     '',
     `Destinatário:   ${recipient.email}`,
     `Solicitado por: ${requestedBy}`,
-    `Sistema:        Agenda BA â€” canal transacional`,
+    `Sistema:        Agenda BA — canal transacional`,
     '',
     `Abrir a agenda: ${baseUrl}`,
     textRule(),
     'Mensagem solicitada pelo administrador. Nenhuma ação é necessária.',
-    `${BRAND.name} â€” ${BRAND.product}`,
+    `${BRAND.name} — ${BRAND.product}`,
   ].join('\n');
 
-  return { subject: `Teste de e-mail â€” ${BRAND.product}`, text, html };
+  return { subject: `Teste de e-mail — ${BRAND.product}`, text, html };
 }
 
 function icsEscape(value: string): string {
