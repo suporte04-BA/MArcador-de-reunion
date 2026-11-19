@@ -83,10 +83,10 @@ const BRAND = {
 
 
 function ctaButton(label: string, href: string): string {
-  return `<table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin:20px 0 4px;">
-    <tr><td bgcolor="${BRAND.accent}" style="background-color:${BRAND.accent};padding:0;mso-padding-alt:10px 20px;">
-      <!--[if mso]><v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="${escapeHtml(href)}" style="height:36px;v-text-anchor:middle;width:180px;" arcsize="15%" stroke="f" fillcolor="${BRAND.accent}"><w:anchorlock/><center style="color:#ffffff;font-family:Arial,sans-serif;font-size:13px;font-weight:bold;">${escapeHtml(label)}</center></v:roundrect><![endif]-->
-      <!--[if !mso]><!--><a href="${escapeHtml(href)}" style="display:inline-block;padding:10px 20px;color:#ffffff;text-decoration:none;font-weight:bold;font-size:13px;border-radius:6px;background-color:${BRAND.accent};letter-spacing:0.3px;">${escapeHtml(label)}</a><!--<![endif]-->
+  return `<table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin:16px 0 4px;">
+    <tr><td bgcolor="${BRAND.accent}" style="background-color:${BRAND.accent};padding:0;mso-padding-alt:8px 16px;">
+      <!--[if mso]><v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="${escapeHtml(href)}" style="height:32px;v-text-anchor:middle;width:150px;" arcsize="15%" stroke="f" fillcolor="${BRAND.accent}"><w:anchorlock/><center style="color:#ffffff;font-family:Arial,sans-serif;font-size:12px;font-weight:bold;">${escapeHtml(label)}</center></v:roundrect><![endif]-->
+      <!--[if !mso]><!--><a href="${escapeHtml(href)}" style="display:inline-block;padding:8px 16px;color:#ffffff;text-decoration:none;font-weight:bold;font-size:12px;border-radius:6px;background-color:${BRAND.accent};letter-spacing:0.3px;">${escapeHtml(label)}</a><!--<![endif]-->
     </td></tr>
   </table>`;
 }
