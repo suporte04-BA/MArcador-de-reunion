@@ -96,7 +96,7 @@ EMAIL_RETRY_MAX_ATTEMPTS=8  EMAIL_RETRY_BASE_SECONDS=60
 
 ### 2.5 Envio de e-mail
 
-**Fluxo atual mapeado:** `outbox` transacional → worker (`FOR UPDATE SKIP LOCKED`, retry exponencial, `attempt_count`, `next_attempt_at`, `last_error`, `provider_message_id`) → `sendMail()` do Nodemailer com logo por CID e anexo `.ics` em eventos de reunião.
+**Fluxo atual mapeado:** `outbox` transacional → worker (`FOR UPDATE SKIP LOCKED`, retry exponencial, `attempt_count`, `next_attempt_at`, `last_error`, `provider_message_id`) → `sendMail()` do Nodemailer com logo por CID (sem anexo `.ics`, removido por decisão).
 
 **Reproduções executadas (18/11/2026):**
 

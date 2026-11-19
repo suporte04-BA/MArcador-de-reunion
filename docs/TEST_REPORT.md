@@ -63,17 +63,16 @@ Cenários cobertos:
 Validado via API do Mailpit (`http://localhost:8025/api/v1/...`) em execuções
 reais:
 
-- Convite: assunto `Ative seu acesso — Agenda BA`, HTML com `cid:logo`,
+- Convite: assunto `Ative seu acesso - Agenda BA`, HTML com `cid:logo`,
   anexo inline `logo-ba.png` (Content-ID `logo`), link `APP_BASE_URL/?convite=`,
   menção a "72 horas", nenhuma senha no corpo.
 - Criação: assunto `Nova reunião agendada: <título>`, HTML com `cid:logo` e
-  `/?reuniao=`, anexo `reuniao.ics` (`text/calendar`), texto com título e
-  responsável.
-- Cancelamento: assunto `Reunião cancelada: <título>`, HTML com `cid:logo`,
-  anexo `.ics`.
-- Teste individual: assunto `Teste de e-mail — Agenda BA`, destinatário único
+  `/?reuniao=`, texto com título e responsável.
+- Cancelamento: assunto `Reunião cancelada: <título>`, HTML com `cid:logo`.
+- Teste individual: assunto `Teste de e-mail - Agenda BA`, destinatário único
   (lista `To` com exatamente um endereço = usuário selecionado).
-- Texto + HTML em todas as mensagens; logo via CID (sem imagem quebrada).
+- Texto + HTML em todas as mensagens; logo via CID (sem imagem quebrada);
+  nenhum anexo `.ics` (removido por decisão — desnecessário).
 
 ## Concorrência
 

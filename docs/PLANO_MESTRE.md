@@ -537,7 +537,7 @@ Requisitos técnicos:
 - texto alternativo para logo;
 - não incluir conteúdo só como imagem;
 - não carregar logo a partir de endereço `localhost` ou IP privado: muitos clientes de e-mail não conseguem acessá-lo. Preferir a logo embutida como imagem inline CID no MIME ou URL HTTPS acessível conforme a política da empresa;
-- opcional recomendado: anexo `.ics` para adicionar a reunião ao calendário, com timezone correto e identificador estável; validar importação antes de marcar como concluído.
+- anexo `.ics`: descartado — o usuário decidiu que é desnecessário nos e-mails da agenda.
 
 ### 7.4 SMTP e segurança
 

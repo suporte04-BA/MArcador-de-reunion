@@ -30,7 +30,7 @@ desenvolvimento o Vite proxya `/api`, `/uploads` e `/brand` para a API.
 ## E-mail
 
 - Todos os e-mails passam pela outbox (transacional).
-- HTML tabelado + texto + logo via CID (`cid:logo`) + anexo `.ics` (UTC).
+- HTML tabelado + texto + logo via CID (`cid:logo`).
 - Convite de uso único (72h); senha temporária administrativa com troca forçada.
 
 ## Front-end

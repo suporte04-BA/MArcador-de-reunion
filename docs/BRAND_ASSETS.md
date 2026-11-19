@@ -11,4 +11,5 @@
 
 - O HTML referencia `cid:logo`; o worker da outbox anexa a imagem como inline
   (`logo-ba.png`, Content-ID `logo`) em todas as mensagens.
-- O anexo `.ics` (`reuniao.ics`) é adicionado em notificações de reunião.
+- Anexo da mensagem: apenas a logo via CID (`cid:logo`). O anexo `.ics`
+  (`reuniao.ics`) foi removido — é desnecessário para os e-mails.

@@ -85,8 +85,8 @@ test('criação com selo Livre, autoria visível e e-mail para todos os ativos',
       expect(body.text).toContain('E2E Condução');
       const all = [...body.attachments, ...body.inline];
       expect(all.some((a) => a.ContentID === 'logo' || a.FileName === 'logo-ba.png')).toBe(true);
-      expect(all.some((a) => a.FileName === 'reuniao.ics')).toBe(true);
-      expect(all.some((a) => a.ContentType.startsWith('text/calendar'))).toBe(true);
+      // Anexo .ics removido por decisão: a mensagem não carrega calendário.
+      expect(all.some((a) => a.FileName.endsWith('.ics'))).toBe(false);
       // Nenhuma credencial viaja por e-mail.
       expect(body.text).not.toMatch(/senha\s*:\s*\S+/i);
       if (process.env.APP_BASE_URL) expect(body.text).toContain(process.env.APP_BASE_URL);
@@ -260,7 +260,7 @@ test('horários consecutivos são permitidos e cancelar libera o horário', asyn
     const body = await mailBody(mail.ID);
     expect(body.html).toContain('cid:logo');
     expect(body.text).toContain(first.title);
-    expect([...body.attachments, ...body.inline].some((a) => a.FileName === 'reuniao.ics')).toBe(true);
+    expect([...body.attachments, ...body.inline].some((a) => a.FileName.endsWith('.ics'))).toBe(false);
   } finally {
     for (const id of ids) await cancelMeetingViaApi(api, id);
     await api.dispose();

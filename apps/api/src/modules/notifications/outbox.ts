@@ -1,6 +1,6 @@
 import type pg from 'pg';
 import { env } from '../../config/env.js';
-import { pool, query, queryOne } from '../../config/db.js';
+import { pool, query } from '../../config/db.js';
 import { sendMail, logoAttachment, logoAvailable, type MailAttachment } from '../../email/mailer.js';
 import {
   renderInviteEmail,
@@ -185,13 +185,11 @@ export async function processOutbox(limit = 10): Promise<ProcessResult> {
 
   const claimed = await pool.query<{
     id: string;
-    event_type: string;
     recipient_email_snapshot: string;
     subject: string;
     text_body: string;
     html_body: string;
     attempt_count: number;
-    meeting_id: string | null;
   }>(
     `UPDATE notification_outbox
         SET status = 'SENDING', updated_at = now(), attempt_count = attempt_count + 1
@@ -203,19 +201,16 @@ export async function processOutbox(limit = 10): Promise<ProcessResult> {
          LIMIT $1
          FOR UPDATE SKIP LOCKED
       )
-      RETURNING id, event_type, recipient_email_snapshot, subject, text_body, html_body,
-                attempt_count, meeting_id`,
+      RETURNING id, recipient_email_snapshot, subject, text_body, html_body,
+                attempt_count`,
     [limit],
   );
 
   for (const row of claimed.rows) {
-    // Logo oficial via CID (o HTML referencia cid:logo) + anexo .ics para
-    // eventos de reunião. Sem o anexo, clientes de e-mail exibiriam imagem
-    // quebrada — a logo precisa viajar na mensagem.
+    // Logo oficial via CID (o HTML referencia cid:logo) — ela precisa viajar
+    // na mensagem; sem ela, clientes de e-mail exibiriam imagem quebrada.
+    // O anexo .ics foi removido: é desnecessário para os e-mails.
     const attachments: MailAttachment[] = [...logoAttachment()];
-    if (row.meeting_id && row.event_type.startsWith('MEETING_')) {
-      attachments.push(...(await loadIcsAttachment(row.meeting_id)));
-    }
 
     const send = await sendMail({
       to: row.recipient_email_snapshot,
@@ -264,47 +259,6 @@ export async function processOutbox(limit = 10): Promise<ProcessResult> {
   }
 
   return result;
-}
-
-async function loadIcsAttachment(
-  meetingId: string,
-): Promise<Array<{ filename: string; content: Buffer; path?: string; contentType?: string; cid?: string }>> {
-  const meeting = await queryOne<{
-    id: string;
-    title: string;
-    responsible_name: string;
-    starts_at: Date;
-    ends_at: Date;
-    description: string;
-    observations: string | null;
-    created_by_name: string;
-    organizer_email: string;
-  }>(
-    `SELECT m.id, m.title, m.responsible_name, m.starts_at, m.ends_at, m.description,
-            m.observations, u.full_name AS created_by_name, u.email AS organizer_email
-       FROM meetings m JOIN users u ON u.id = m.created_by_user_id
-      WHERE m.id = $1`,
-    [meetingId],
-  );
-  if (!meeting) return [];
-
-  const { icsAttachment } = await import('../../email/templates.js');
-  const ics = icsAttachment(
-    {
-      id: meeting.id,
-      title: meeting.title,
-      responsibleName: meeting.responsible_name,
-      startsAt: meeting.starts_at,
-      endsAt: meeting.ends_at,
-      description: meeting.description,
-      observations: meeting.observations,
-      createdByName: meeting.created_by_name,
-      createdAt: meeting.starts_at,
-    },
-    meeting.organizer_email,
-  );
-
-  return [{ filename: ics.filename, content: ics.content, contentType: ics.contentType }];
 }
 
 /** Loop contínuo do worker (iniciado pelo servidor). */
