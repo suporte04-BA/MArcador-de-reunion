@@ -41,25 +41,47 @@ const BRAND = {
 };
 
 function ctaButton(label: string, href: string): string {
-  return `<table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin:16px 0 4px;">
-    <tr><td bgcolor="${BRAND.accent}" style="background-color:${BRAND.accent};padding:0;mso-padding-alt:8px 16px;">
-      <!--[if mso]><v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="${escapeHtml(href)}" style="height:32px;v-text-anchor:middle;width:150px;" arcsize="15%" stroke="f" fillcolor="${BRAND.accent}"><w:anchorlock/><center style="color:#ffffff;font-family:Arial,sans-serif;font-size:12px;font-weight:bold;">${escapeHtml(label)}</center></v:roundrect><![endif]-->
-      <!--[if !mso]><!--><a href="${escapeHtml(href)}" style="display:inline-block;padding:8px 16px;color:#ffffff;text-decoration:none;font-weight:bold;font-size:12px;border-radius:6px;background-color:${BRAND.accent};letter-spacing:0.3px;">${escapeHtml(label)}</a><!--<![endif]-->
-    </td></tr>
+  // Botão "bulletproof" baseado em padding de <td> (padrão profissional para
+  // Outlook 2016: sem VML, sem dependência de border-radius — funciona igual
+  // no Word engine e em clientes modernos).
+  return `<table role="presentation" cellpadding="0" cellspacing="0" border="0" align="left" style="margin:20px 0 4px;mso-cellspacing:0;">
+    <tr>
+      <td align="center" bgcolor="${BRAND.accent}" style="background-color:${BRAND.accent};padding:12px 24px;border-radius:6px;mso-padding-alt:12px 24px;">
+        <a href="${escapeHtml(href)}" style="display:inline-block;color:#ffffff;font-family:Arial,Helvetica,sans-serif;font-size:13px;font-weight:bold;text-decoration:none;letter-spacing:0.4px;line-height:1.4;mso-line-height-rule:exactly;">${escapeHtml(label)}</a>
+      </td>
+    </tr>
   </table>`;
 }
 
 function infoRow(label: string, value: string, isLast: boolean): string {
+  // Linha de detalhe: coluna de rótulo com fundo próprio + coluna de valor,
+  // espaçamento generoso (16/20, múltiplos de 4 — evita linhas brancas no Word)
+  // e separadores sutis. Alinhamento vertical centralizado.
+  const border = isLast ? 'none' : '1px solid #e8edf4';
   return `<tr>
-    <td style="padding:12px 0 ${isLast ? '0' : '12px'};color:${BRAND.muted};font-size:12px;width:120px;vertical-align:top;border-bottom:${isLast ? 'none' : '1px solid #f1f5f9'};text-transform:uppercase;letter-spacing:0.5px;font-weight:600;">${escapeHtml(label)}</td>
-    <td style="padding:12px 0 ${isLast ? '0' : '12px'};color:${BRAND.text};font-size:14px;font-weight:500;vertical-align:top;border-bottom:${isLast ? 'none' : '1px solid #f1f5f9'};">${value}</td>
+    <td width="170" bgcolor="${BRAND.surface}" style="background-color:${BRAND.surface};padding:16px 20px;color:${BRAND.muted};font-family:Arial,Helvetica,sans-serif;font-size:11px;font-weight:bold;text-transform:uppercase;letter-spacing:1px;line-height:1.4;vertical-align:middle;border-bottom:${border};mso-line-height-rule:exactly;mso-padding-alt:16px 20px;">${escapeHtml(label)}</td>
+    <td style="padding:16px 20px;color:${BRAND.dark};font-family:Arial,Helvetica,sans-serif;font-size:14px;font-weight:600;line-height:1.5;vertical-align:middle;border-bottom:${border};mso-line-height-rule:exactly;mso-padding-alt:16px 20px;">${value}</td>
   </tr>`;
 }
 
-function summaryTable(rows: Array<[string, string]>): string {
+function summaryTable(rows: Array<[string, string]>, title: string): string {
+  // IMPORTANTE: as linhas (<tr>) são filhas diretas do <table> — nunca
+  // aninhadas dentro de um <td> (HTML inválido quebra o Word engine do Outlook).
+  // Composto por: faixa de destaque azul (4px), barra de título escura e as
+  // linhas de detalhe com coluna de rótulo em fundo claro.
   const body = rows.map(([label, value], i) => infoRow(label, value, i === rows.length - 1)).join('');
-  return `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="${BRAND.cardBg}" style="width:100%;max-width:600px;border-collapse:collapse;background-color:${BRAND.cardBg};border:1px solid ${BRAND.border};margin:0 0 8px;mso-cellspacing:0;mso-padding-alt:8px 24px;">
-    <tr><td style="padding:8px 24px;mso-padding-alt:8px 24px;">${body}</td></tr>
+  return `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="${BRAND.cardBg}" style="width:100%;max-width:600px;border-collapse:collapse;background-color:${BRAND.cardBg};border:1px solid #dbe3ee;margin:0 0 20px;mso-cellspacing:0;">
+    <tr><td colspan="2" height="4" bgcolor="${BRAND.accent}" style="background-color:${BRAND.accent};height:4px;font-size:0;line-height:0;mso-line-height-rule:exactly;">&nbsp;</td></tr>
+    <tr><td colspan="2" bgcolor="${BRAND.dark}" style="background-color:${BRAND.dark};padding:16px 20px;color:#ffffff;font-family:Arial,Helvetica,sans-serif;font-size:12px;font-weight:bold;text-transform:uppercase;letter-spacing:2px;line-height:1.4;mso-line-height-rule:exactly;mso-padding-alt:16px 20px;">${escapeHtml(title)}</td></tr>
+    ${body}
+  </table>`;
+}
+
+function badgeHtml(label: string, bgColor: string): string {
+  // Selo de status: tabela aninhada com bgcolor (renderiza em todo cliente;
+  // border-radius é ignorado no Word e o selo continua correto com cantos retos).
+  return `<table role="presentation" cellpadding="0" cellspacing="0" border="0" align="left" style="display:inline-block;mso-cellspacing:0;">
+    <tr><td align="center" bgcolor="${escapeHtml(bgColor)}" style="background-color:${escapeHtml(bgColor)};color:#ffffff;font-family:Arial,Helvetica,sans-serif;font-size:12px;font-weight:bold;padding:8px 16px;border-radius:4px;letter-spacing:0.4px;line-height:1.4;mso-line-height-rule:exactly;mso-padding-alt:8px 16px;">${escapeHtml(label)}</td></tr>
   </table>`;
 }
 
@@ -113,7 +135,14 @@ function layout(opts: LayoutOptions): string {
   img { border:0; height:auto; line-height:100%; outline:none; text-decoration:none; -ms-interpolation-mode:bicubic; }
   h1 { margin:0; }
   a { color:${BRAND.accent}; }
+  .ExternalClass { width:100%; }
+  .ExternalClass p, .ExternalClass span, .ExternalClass font, .ExternalClass td, .ExternalClass div { line-height:100%; }
 </style>
+<!--[if mso]>
+<style type="text/css">
+  body, table, td { font-family:Arial,Helvetica,sans-serif !important; }
+</style>
+<![endif]-->
 </head>
 <body style="margin:0;padding:0;background:#f1f5f9;font-family:Arial,Helvetica,sans-serif;-webkit-text-size-adjust:100%;mso-line-height-rule:exactly;">
 <div style="display:none;max-height:0;overflow:hidden;opacity:0;color:transparent;mso-hide:all;">${escapeHtml(opts.preheader)}</div>
@@ -214,8 +243,8 @@ function meetingSummaryText(m: MeetingMailData): string {
   return [
     `Assunto:        ${m.title}`,
     `Data:           ${formatFullDateBR(zonedDateStr(m.startsAt))}`,
-    `Inicio:         ${utcToZonedTimeStr(m.startsAt, DEFAULT_TIMEZONE)}`,
-    `Termino:        ${utcToZonedTimeStr(m.endsAt, DEFAULT_TIMEZONE)}`,
+    `Início:         ${utcToZonedTimeStr(m.startsAt, DEFAULT_TIMEZONE)}`,
+    `Término:        ${utcToZonedTimeStr(m.endsAt, DEFAULT_TIMEZONE)}`,
     `Duração:        ${durationText(minutesBetween(m.startsAt, m.endsAt))}`,
     `Responsável:    ${m.responsibleName}`,
     `Setor:          ${m.departmentName ?? '-'}`,
@@ -230,7 +259,7 @@ export function renderMeetingEmail(
   baseUrl: string,
   logoAvailableFlag: boolean,
 ): RenderedEmail {
-  const meetingUrl = `${baseUrl}/?reunião=${encodeURIComponent(m.id)}`;
+  const meetingUrl = `${baseUrl}/?reuniao=${encodeURIComponent(m.id)}`;
   const when = formatWhen(m);
 
   const config = {
@@ -239,7 +268,7 @@ export function renderMeetingEmail(
       heading: 'Nova reunião agendada',
       preheader: `${m.title} - ${when}`,
       intro: `Olá, <strong>${escapeHtml(recipient.fullName)}</strong>. Uma nova reunião foi agendada na agenda compartilhada da ${escapeHtml(BRAND.name)}.`,
-      note: 'Você recebeu este e-mail porque é um usuário ativo da Agenda BA. Todas as reuniões da empresa são comúnicadas a todos os usuários ativos.',
+      note: 'Você recebeu este e-mail porque é um usuário ativo da Agenda BA. Todas as reuniões da empresa são comunicadas a todos os usuários ativos.',
       cta: 'Ver reunião na Agenda BA',
     },
     updated: {
@@ -247,7 +276,7 @@ export function renderMeetingEmail(
       heading: 'Reunião alterada',
       preheader: `${m.title} - ${when}`,
       intro: `Olá, <strong>${escapeHtml(recipient.fullName)}</strong>. A reunião abaixo teve alterações em seus dados ou horário.`,
-      note: 'Você recebeu este e-mail porque é um usuário ativo da Agenda BA. Confirá os dados atualizados antes da reunião.',
+      note: 'Você recebeu este e-mail porque é um usuário ativo da Agenda BA. Confira os dados atualizados antes da reunião.',
       cta: 'Ver reunião na Agenda BA',
     },
     cancelled: {
@@ -263,7 +292,7 @@ export function renderMeetingEmail(
       heading: 'Lembrete de reunião hoje',
       preheader: `${m.title} - ${when}`,
       intro: `Olá, <strong>${escapeHtml(recipient.fullName)}</strong>. Lembrete: você tem uma reunião agendada para <strong>hoje</strong>.`,
-      note: 'Você recebeu este e-mail porque é um usuário ativo da Agenda BA. Confirá os detalhes abaixo e prepare-se para a reunião.',
+      note: 'Você recebeu este e-mail porque é um usuário ativo da Agenda BA. Confira os detalhes abaixo e prepare-se para a reunião.',
       cta: 'Ver reunião na Agenda BA',
     },
   }[kind];
@@ -296,7 +325,7 @@ export function renderMeetingEmail(
     contentHtml: `
       ${changedHtml}
       ${whenCard}
-      ${summaryTable(meetingRows(m))}
+      ${summaryTable(meetingRows(m), 'Detalhes da reunião')}
       ${descriptionHtml}
       ${observationsHtml}
       <p style="color:${BRAND.muted};font-size:12px;margin:16px 0 0;mso-line-height-rule:exactly;">Horário de referência: ${escapeHtml(when)}.</p>`,
@@ -346,14 +375,13 @@ export function renderInviteEmail(
     introHtml: `Olá, <strong>${escapeHtml(user.fullName)}</strong>. Um acesso foi criado para você na agenda corporativa da ${escapeHtml(BRAND.name)}.`,
     logoHtml: logoHtmlBlock(logoAvailableFlag),
     contentHtml: summaryTable([
-      ['Nome de usuario', escapeHtml(user.username)],
+      ['Nome de usuário', escapeHtml(user.username)],
       ['E-mail', escapeHtml(user.email)],
-      ['Perfil', user.username ? 'Conforme cadastrado pelo administrador' : '-'],
-    ]),
+    ], 'Dados do acesso'),
     ctaLabel: 'Ativar meu acesso',
     ctaHref: activateUrl,
     footerNote:
-      'Este link e de uso único e expirá em 72 horas. Se você nao solicitou este acesso, ignore esta mensagem. Por segurança, nenhuma senha e enviada por e-mail: você definirá a sua própria senha no primeiro acesso.',
+      'Este link é de uso único e expira em 72 horas. Se você não solicitou este acesso, ignore esta mensagem. Por segurança, nenhuma senha é enviada por e-mail: você definirá a sua própria senha no primeiro acesso.',
   });
 
   const text = [
@@ -363,12 +391,12 @@ export function renderInviteEmail(
     '',
     'Um acesso foi criado para você na agenda corporativa da BA Elétrica.',
     '',
-    `Nome de usuario: ${user.username}`,
+    `Nome de usuário: ${user.username}`,
     `E-mail:         ${user.email}`,
     '',
     `Ativar meu acesso: ${activateUrl}`,
     '',
-    'O link é de uso único e expirá em 72 horas. Nenhuma senha é enviada por e-mail:',
+    'O link é de uso único e expira em 72 horas. Nenhuma senha é enviada por e-mail:',
     'você irá definir a sua própria senha ao ativar o acesso.',
     textRule(),
     `${BRAND.name} - ${BRAND.product}`,
@@ -391,11 +419,11 @@ export function renderWelcomeEmail(
     introHtml: `Olá, <strong>${escapeHtml(user.fullName)}</strong>. Seu acesso à agenda corporativa da ${escapeHtml(BRAND.name)} foi cadastrado e já está ativo.`,
     logoHtml: logoHtmlBlock(logoAvailableFlag),
     contentHtml: summaryTable([
-      ['Nome de usuario', escapeHtml(user.username)],
+      ['Nome de usuário', escapeHtml(user.username)],
       ['E-mail', escapeHtml(user.email)],
       ['Setor', escapeHtml(departmentName)],
-      ['Situação', 'Ativo - login liberado'],
-    ]),
+      ['Situação', badgeHtml('Ativo - login liberado', BRAND.success)],
+    ], 'Dados do acesso'),
     ctaLabel: 'Abrir a Agenda BA',
     ctaHref: baseUrl,
     footerNote:
@@ -409,7 +437,7 @@ export function renderWelcomeEmail(
     '',
     'Seu acesso à agenda corporativa da BA Elétrica foi cadastrado e já está ativo.',
     '',
-    `Nome de usuario: ${user.username}`,
+    `Nome de usuário: ${user.username}`,
     `E-mail:         ${user.email}`,
     `Setor:          ${departmentName}`,
     'Situação:       Ativo - login liberado',
@@ -422,7 +450,7 @@ export function renderWelcomeEmail(
     baseUrl,
   ].join('\n');
 
-  return { subject: `Seu acesso esta ativo - ${BRAND.product}`, text, html };
+  return { subject: `Seu acesso está ativo - ${BRAND.product}`, text, html };
 }
 
 export function renderPasswordResetEmail(
@@ -432,7 +460,7 @@ export function renderPasswordResetEmail(
   logoAvailableFlag: boolean,
 ): RenderedEmail {
   const resetUrl = `${baseUrl}/?redefinir=${encodeURIComponent(token)}`;
-  const heading = 'Redefinicao de senha';
+  const heading = 'Redefinição de senha';
   const html = layout({
     preheader: 'Solicitação de redefinição de senha',
     heading,
@@ -451,7 +479,7 @@ export function renderPasswordResetEmail(
     `Olá ${user.fullName},`,
     '',
     'Recebemos uma solicitação para redefinir a senha da sua conta.',
-    `Usuario: ${user.username}`,
+    `Usuário: ${user.username}`,
     '',
     `Redefinir: ${resetUrl}`,
     'O link expirá em 60 minutos e é de uso único.',
@@ -462,7 +490,7 @@ export function renderPasswordResetEmail(
     baseUrl,
   ].join('\n');
 
-  return { subject: `Redefinicao de senha - ${BRAND.product}`, text, html };
+  return { subject: `Redefinição de senha - ${BRAND.product}`, text, html };
 }
 
 export function renderTestEmail(
@@ -481,8 +509,8 @@ export function renderTestEmail(
       ['Destinatário', escapeHtml(recipient.email)],
       ['Solicitado por', escapeHtml(requestedBy)],
       ['Sistema', 'Agenda BA - canal transacional'],
-      ['Status', 'Mensagem de teste enviada com sucesso'],
-    ]),
+      ['Status', badgeHtml('Mensagem de teste enviada com sucesso', BRAND.success)],
+    ], 'Informações do teste'),
     ctaLabel: 'Abrir a Agenda BA',
     ctaHref: baseUrl,
     footerNote:

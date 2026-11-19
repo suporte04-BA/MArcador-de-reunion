@@ -98,7 +98,7 @@ describe('convite e redefinição — nunca enviam senha', () => {
 
   it('convite: link de uso único com expiração de 72h', () => {
     const r = renderInviteEmail(inviteUser, 'TOKEN_CONVITE_123', BASE, true);
-    expect(r.subject).toBe('Ative seu acesso — Agenda BA');
+    expect(r.subject).toBe('Ative seu acesso - Agenda BA');
     expect(r.html).toContain(`${BASE}/?convite=TOKEN_CONVITE_123`);
     expect(r.text).toContain(`${BASE}/?convite=TOKEN_CONVITE_123`);
     expect(r.html).toContain('72 horas');
